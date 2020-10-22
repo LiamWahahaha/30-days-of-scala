@@ -34,10 +34,20 @@
 ## [Scaladoc](https://www.scala-lang.org/api/current/)
 
 ## Exercises
-1. 
+1.
+![Methods that can be applied...](https://github.com/LiamWahahaha/30-days-of-scala/blob/day-01/day-01/images/methods%20that%20can%20be%20applied%20to%20a%20number.png)
+
 2. 
 ```
 val root = math.sqrt(3)
 3 - root * root
 ```
+
 3.
+res variables are val.
+
+4.
+
+5.
+
+6.
