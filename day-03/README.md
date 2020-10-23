@@ -76,3 +76,28 @@ buffer.toArray
 val arr = Array(1, 2, 3)
 arr.toBuffer
 ```
+
+## Traversing Arrays and Array Buffers
+* Use **until** method to traverse an Array or Array Buffer. **until** will excludes the last value
+```
+for (i <- 0 until a.length)
+    println(s"$i: ${a(i)}")
+```
+or
+```
+for (i <- a.indices)
+    println(s"$i: ${a(i)}")
+```
+* To visit every second element
+```
+for (i <- 0 until a.length by 2)
+```
+* To visit the elements startingg from the end of the array
+```
+for (i <- 0 until a.length by -1) // not working
+for (i <- a.length - 1 to 0 by -1)
+```
+or
+```
+for (i <- a.indices.reverse)
+```
