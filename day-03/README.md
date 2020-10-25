@@ -44,6 +44,7 @@ buffer += 1 // ArrayBuffer(1)
 ```
 ```
 buffer += (1, 2, 3, 5) // ArrayBuffer(1, 1, 2, 3, 5)
+// deprecated function, use `++=`(addAll) instead of `+=`
 ```
 ```
 buffer ++= Array(8, 13, 21) // ArrayBuffer(1, 1, 2, 3, 5, 8, 13, 21)
@@ -101,3 +102,116 @@ or
 ```
 for (i <- a.indices.reverse)
 ```
+
+## Transforming Arrays
+```
+val a = Array(2, 3, 5, 7, 11)
+val result = for (elem <- a) yield 2 * elem
+// result is Array(2, 6, 10, 14, 22)
+```
+* To double every even elemnt and drop the odd ones:
+```
+for (elem <- a i elem % 2 == 0) yield 2 * elem
+```
+or
+```
+a.filter(_ % 2 == 0).map(2 * _)
+```
+or
+```
+a.filter { _ % 2 == 0 } map { 2 * _ }
+```
+* To remove all negative elements from an array buffer of integers
+```
+var n = a.length
+var i = 0
+while (i < n) {
+    if (a(i) >= 0) i += 1
+    else { a.remove(i); n -= 1 }
+}
+```
+a better alternative
+```
+val result = for (elem <- a if elem >= 0) yield elem
+```
+* What if we want to modify the original array buffer instead?
+```
+val positionsToRemove = for (i <- a.indices if a(i) < 0) yield i
+for (i <- positionsToRemove.reverse) a.remove(i)
+```
+or
+```
+val positionsToKeep = for (i <- a.indices if a(i) >= 0) yield i
+for (j <- positionsToKeep.indices) a(j) = a(positionsToKeep(j))
+a.trimEnd(a.length - positionsToKeep.length)
+```
+**It's better to have all index values together instead of seeing them one by one**
+
+## Common Algorithms
+* A large percentage of business computations are nothing but computing sums and sorting.
+* Trivial built-in functions
+  * sum, max, min
+* Nontrivial built-in functions
+  * sorted
+    * sorts an array or array buffer and **returns** the sorted array or array buffer without modifying the original
+    ```
+    val b = ArrayBuffer(1, 7, 2, 9)
+    val bSorted = b.sorted
+    // b is unchanged; bSorted is ArrayBuffer(1, 2, 7, 9)
+    ```
+    * descending order
+    ```
+    val bDescending = b.sortWith(_ > _)
+    // ArrayBuffer(9, 7, 2, 1)
+    ```
+  * sort an array in place **(can not sort an array buffer in place)**
+  ```
+  val a = Array(1, 7, 2, 9)
+  scala.util.Sorting.quickSort(a)
+  // a is now Array(1, 2, 7, 9)
+  ```
+  ```
+  import scala.collection.mutable.ArrayBuffer
+  val b = ArrayBuffer[Int]()
+  b ++= Array(1, 7, 2, 9)
+  scala.util.Sorting.quickSort(b)
+  // error: ... cannot be applied to (scala.collection.mutable.ArrayBuffer[Int])
+  ```
+* For the min, max, quickSort methods, the element type must have a comparison operation.
+  * This is the case for numbers, strings, and other types with the **Ordered** trait.
+* mkString **(similar to python's join function)**
+```
+a.mkString(" and ")
+// "1 and 2 and 7 and 9"
+```
+  * can give prefix and suffix too
+  ```
+  a.mkString("<", ",", ">")
+  // "<1,2,7,9>"
+  ```
+* toString
+  * use toString on an Array => not very useful
+  * use toString on an ArrayBuffer => the toString method will report the type, which is useful for debugging
+
+## Deciphering Scaladoc
+* Check the book (p.42 - 43)
+
+## Multidimensional Arrays
+* To construct an n-d array
+```
+val matrix = Array.ofDim[Double](3, 4) // Three rows, four columns
+```
+* To access an element
+```
+matrix(row)(column) = 42
+```
+* Can make ragged arrays!
+```
+val triangle = new Array[Array[Int]](10)
+for (i <- triangle.indices)
+    triangle(i) = new Array[Int](i + 1)
+```
+
+## Interoperating with Java (skip until familiar with Java)
+
+## Exercises
