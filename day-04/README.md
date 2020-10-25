@@ -32,7 +32,7 @@ val bobsScore = scores("Bob")
 * How to handle exception?
 ```
 val bobsScore = if (scores.contains("Bob")) scores("Bob") else 0
-``
+```
 or
 ```
 val bobsScore = scores.getOrElse("Bob", 0)
@@ -58,7 +58,7 @@ scores += ("Fred" -> 7)
 ```
 scores ++= scala.collection.mutable.Map("Bob" -> 10, "Fred" -> 7)
 ```
-* Remmove a key and its associated value
+* Remove a key and its associated value
 ```
 scores -= "Alice"
 ```
