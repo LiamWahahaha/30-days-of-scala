@@ -95,4 +95,7 @@ val p1 = new Person("Fred", 42)
   * Otherwise, the parameter is not saved as a field.
     * It's just a regular parameter that can be accessed in the code of the primary constructor.
     
-## Nested Classes
+## Nested Classes (Back from day 8)
+
+
+## Exercises
