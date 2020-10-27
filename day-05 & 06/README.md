@@ -30,3 +30,69 @@
 * In scala, it is impossible to have a write-only property.
 * When see a field in a Scala class, remeber that it is not the same as a field in Java or C++.
   * It is a private field together with a getter (for a val field) or a getter and a setter (for a var field).
+
+## Object-Private Fields
+* A method can access th private fields of all objects of its class. For example,
+```
+class Counter {
+    private var value = 0
+    def increment():Unit = { valu += 1 }
+    
+    def isLess(other : Counter) = value < other.value // Can access private field of other object
+}
+```
+* Use private[this] qualifier to have a more severe access restriction:
+```
+class Counter {
+    private[this] var value = 0
+    def increment():Unit = { valu += 1 }
+    
+    def isLess(other : Counter) = value < other.value // Can access private field of other object
+}
+```
+Now the methods of the Counter class can only access the value field of the current object, not of other objects of type Counter.
+* For an object-private field, no getters and setters are generated at all.
+* For a class-private field, Scala generates private getter and setter methods.
+
+## Beab Properties
+```
+import scala.beans.BeanProperty
+
+class Person {
+    @BeanProperty var name: String = _
+}
+```
+generates four methods:
+1. name: String
+2. name_=(newValue: String): Unit
+3. getName(): String
+4. setName(newValue: String): Unit
+
+## Auxiliary Constructors
+* The auxiliary constructors are called **this**.
+* Each auxiliary constructor must start with a call to a previously defined auxiliary constructor or the primary constructor.
+```
+:load AuxiliaryConstructors/Person.scala
+
+val p1 = new Person // Primary.constructor
+val p2 = new Person("Fred") // First auxiliary constructor
+val p3 = new Person("Fred", 30) // Second auxiliary constructor
+```
+
+## The Primary Constructor
+* Every class has a primary constructor.
+* The parameters of the primary constructor are placed **immediately after the class name**.
+```
+:load PrimaryConstructor/Person.scala
+
+val p1 = new Person("Fred", 42)
+// Just constructed another person
+```
+* Primary constructor parameters can have any of the forms.
+* Construction parameters can also be regular method parameters, without **val** or **var**.
+  * If a parameter without **val** or **var** is used inside at least one method, it becomes a field
+    * Declares and initializes immutable fields are object-private.
+  * Otherwise, the parameter is not saved as a field.
+    * It's just a regular parameter that can be accessed in the code of the primary constructor.
+    
+## Nested Classes
